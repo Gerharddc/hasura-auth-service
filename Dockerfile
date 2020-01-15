@@ -5,6 +5,7 @@ RUN yarn global add typescript ts-node
 
 COPY index.ts .
 COPY package.json .
+COPY tsconfig.json .
 
 RUN yarn && apk del build-dependencies
 
