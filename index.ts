@@ -26,7 +26,7 @@ const resolvers = {
         update_Password: async (_, { currentPassword, newPassword }, context) => {
             const id = context.request.headers['x-hasura-user-id'];
 
-            const user = await pg(USER_TABLE).where({ where: { id } }).first();
+            const user = await pg(USER_TABLE).where({ id }).first();
             if (!user) {
                 throw new Error(`User does not exist`);
             }
@@ -37,7 +37,7 @@ const resolvers = {
             }
 
             await pg(USER_TABLE)
-                .where({ where: { id } })
+                .where({ id })
                 .update({ password: newPassword });
 
             return true;
@@ -57,7 +57,7 @@ app.post('/login', async (req, res) => {
         return res.status(500).send('Invalid request');
     }
 
-    const testUser = await pg(USER_TABLE).where({ where: { username } }).first();
+    const testUser = await pg(USER_TABLE).where({ username }).first();
 
     if (!testUser) {
         return res.send('Invalid login');
@@ -107,4 +107,4 @@ app.post('/verifyToken', async (req, res) => {
     });
 });
 
-app.listen(3000);
+app.listen(3000, '0.0.0.0');
