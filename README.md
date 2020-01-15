@@ -8,7 +8,7 @@ Finally the service provides a 'update_Password' GraphQL mutation that clients c
 
 Passwords unfortunately need to be sent in cleartext for login and changing because bcrypt needs to compare the password to the hash stored in the DB and because the salt is random, clients will not be able to provide the same hash which makes it impossible to compare to the stored hash. It is therefore recommended that all communication be over TLS, especially considering how tokens are also sent back in cleartext as well...
 
-This server assumes that a Postgres DB is used to store user information considering how it is intended to be used in conjunction with Hasura. The name of the table to use is passed in as an environment variable. The only assumption that the service makes is that the table has a 'username' column, an id column, a 'password' column containing bcrypted passwords, and a string array table named 'roles' containing the user's roles 
+This server assumes that a Postgres DB is used to store user information considering how it is intended to be used in conjunction with Hasura. The name of the table to use is passed in as an environment variable. The only assumption that the service makes is that the table has a 'username' column, an id column, a 'password' column containing bcrypted passwords, and a string array table named 'roles' containing the user's roles.
 
 The following environment variables need to be provided to the service:
 
@@ -17,4 +17,4 @@ The following environment variables need to be provided to the service:
 | PG_CONNECTION_STRING | The connection string required to connect to the Postgres DB with the user table |
 | USER_TABLE | The table that contains the user login details |
 
-The service also requires that an RSA key be provided for JWT token generation and authentication. This key can be generated using the included jwt.sh. The service assumes that these keys are mounted on the '/run/secrets' folder.
+The service also requires that an RSA key be provided for JWT token generation and authentication. This key can be generated using the included jwt.sh. The service assumes that these keys are mounted on the '/etc/jwtkeys' folder.
