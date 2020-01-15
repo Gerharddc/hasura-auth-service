@@ -10,4 +10,6 @@ COPY tsconfig.json .
 RUN yarn && apk del build-dependencies
 
 EXPOSE 3000
+EXPOSE 80
+
 CMD ["ts-node", "index.ts"]

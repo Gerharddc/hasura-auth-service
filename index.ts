@@ -3,9 +3,11 @@ import jwt from 'jsonwebtoken';
 import bcrypt from 'bcrypt';
 import knex from 'knex';
 import * as fs from 'fs';
+import { ApolloServer, gql } from 'apollo-server-fastify';
 
-const GQL = require('fastify-gql');
 const app = Fastify();
+const gqlapp = Fastify();
+
 const pg = knex({
     client: 'pg',
     connection: process.env.PG_CONNECTION_STRING,
@@ -15,13 +17,22 @@ const USER_TABLE = process.env.USER_TABLE;
 const KEY = fs.readFileSync('/etc/jwtkeys/jwt.key');
 const KEY_PUB = fs.readFileSync('/etc/jwtkeys/jwt.key.pub');
 
-const schema = `
+const typeDefs = gql`
+    type Query {
+        no_op: String
+    }
+
     type Mutation {
         update_Password(currentPassword: String!, newPassword: String!): Boolean
     }
 `
 
 const resolvers = {
+    Query: {
+        no_op: () => {
+            return 'I do nothing';
+        }
+    },
     Mutation: {
         update_Password: async (_, { currentPassword, newPassword }, context) => {
             const id = context.request.headers['x-hasura-user-id'];
@@ -45,10 +56,11 @@ const resolvers = {
     }
 }
 
-app.register(GQL, {
-    schema,
-    resolvers
+const server = new ApolloServer({
+    typeDefs,
+    resolvers,
 });
+gqlapp.register(server.createHandler());
 
 app.get('/', (req, res) => {
     res.send('Service running');
@@ -118,4 +130,13 @@ app.listen(3000, '0.0.0.0', (err, address) => {
     }
 
     app.log.info(`server listening on ${address}`);
+});
+
+gqlapp.listen(80, '0.0.0.0', (err, address) => {
+    if (err) {
+        gqlapp.log.error(err)
+        process.exit(1)
+    }
+
+    gqlapp.log.info(`gql server listening on ${address}`);
 });
