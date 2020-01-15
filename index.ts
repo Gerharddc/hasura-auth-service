@@ -50,6 +50,10 @@ app.register(GQL, {
     resolvers
 });
 
+app.get('/', (req, res) => {
+    res.send('Service running');
+});
+
 app.post('/login', async (req, res) => {
     const { username, password } = req.body;
 
@@ -107,4 +111,11 @@ app.post('/verifyToken', async (req, res) => {
     });
 });
 
-app.listen(3000, '0.0.0.0');
+app.listen(3000, '0.0.0.0', (err, address) => {
+    if (err) {
+        app.log.error(err)
+        process.exit(1)
+    }
+
+    app.log.info(`server listening on ${address}`);
+});
