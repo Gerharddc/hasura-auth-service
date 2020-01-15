@@ -1,10 +1,10 @@
 import Fastify from 'fastify';
-import GQL from 'fastify-gql';
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcrypt';
 import knex from 'knex';
-import fs from 'fs';
+import * as fs from 'fs';
 
+const GQL = require('fastify-gql');
 const app = Fastify();
 const pg = knex({
     client: 'pg',
@@ -12,8 +12,8 @@ const pg = knex({
 });
 
 const USER_TABLE = process.env.USER_TABLE;
-const KEY = fs.readFileSync('/run/secrets/jwt.key');
-const KEY_PUB = fs.readFileSync('/run/secrets/jwt.key.pub');
+const KEY = fs.readFileSync('/etc/jwtkeys/jwt.key');
+const KEY_PUB = fs.readFileSync('/etc/jwtkeys/jwt.key.pub');
 
 const schema = `
     type Mutation {
