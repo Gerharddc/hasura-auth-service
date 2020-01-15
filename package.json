@@ -1,0 +1,13 @@
+{
+  "dependencies": {
+    "bcrypt": "^3.0.7",
+    "fastify": "^2.11.0",
+    "fastify-gql": "^2.2.0",
+    "jsonwebtoken": "^8.5.1",
+    "knex": "^0.20.8",
+    "pg": "^7.17.1"
+  },
+  "devDependencies": {
+    "@types/node": "^13.1.6"
+  }
+}
