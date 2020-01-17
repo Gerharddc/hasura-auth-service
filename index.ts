@@ -35,7 +35,7 @@ const resolvers = {
     },
     Mutation: {
         update_Password: async (_, { currentPassword, newPassword }, context) => {
-            const id = context.request.headers['x-hasura-user-id'];
+            const { id } = context.user;
 
             const user = await pg(USER_TABLE).where({ id }).first();
             if (!user) {
@@ -59,6 +59,15 @@ const resolvers = {
 const server = new ApolloServer({
     typeDefs,
     resolvers,
+    context: async ({ req, connection }) => {
+        if (connection) {
+            return connection.context;
+        } else {
+            const id = req.headers['x-hasura-user-id'];
+            const roles = req.headers['x-hasura-allowed-roles'];
+            return { user: { id, roles } };
+        }
+    },
 });
 gqlapp.register(server.createHandler());
 
