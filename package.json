@@ -1,7 +1,7 @@
 {
   "dependencies": {
     "apollo-server-fastify": "^2.9.16",
-    "bcrypt": "^3.0.7",
+    "bcrypt": "^5.0.0",
     "fastify": "^2.11.0",
     "graphql": "^14.5.8",
     "jsonwebtoken": "^8.5.1",
